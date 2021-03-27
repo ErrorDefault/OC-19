@@ -75,13 +75,6 @@ abstract class DataRequest{
 }
 
 class CountyDataRequest extends DataRequest {
-    private static final String BASE_URL = "https://opendata.arcgis.com/datasets/e5ceebe7edba44cc8f875ca54cc2341a_0/FeatureServer/0/query?where=1%3D1&outFields=date,cumulativecases_specimen,dailycases_specimen,cumulativedeaths_date,dailydeaths_date";
-    protected URL createURL(String... args) throws MalformedURLException {
-        return new URL(BASE_URL);
-    }
-}
-
-class CountyDataRequest2 extends DataRequest {
     private static final String BASE_URL = "https://occovid19.ochealthinfo.com/coronavirus-in-oc";
     protected URL createURL(String... args) throws MalformedURLException {
         return new URL(BASE_URL);
@@ -132,57 +125,6 @@ abstract class DataRequestReader {
 }
 
 class CountyDataRequestReader extends DataRequestReader {
-    public static final String NULL = "null";
-
-    private static int getLastNumberValueIndex(String data, String search){
-        int endIndex = data.lastIndexOf(search);
-        while(data.substring(endIndex + search.length(), endIndex + search.length() + NULL.length()).equals(NULL)){
-            data = data.substring(0, endIndex);
-            endIndex = data.lastIndexOf(search);
-        }
-        return endIndex;
-    }
-
-    private static long getLastNumberValue(String data, String search){
-        int endIndex = getLastNumberValueIndex(data, search);
-        return parseNumber(data, endIndex + search.length());
-    }
-
-    public static long getTotalCountyCases(String data) {
-        return getLastNumberValue(data, "\"cumulativecases_specimen\":");
-    }
-
-    public static long getDailyCountyCases(String data) {
-        return getLastNumberValue(data, "\"dailycases_specimen\":");
-    }
-
-    public static long getTotalCountyDeaths(String data) {
-        return getLastNumberValue(data, "\"cumulativedeaths_date\":");
-    }
-
-    public static long getDailyCountyDeaths(String data) {
-        return getLastNumberValue(data, "\"dailydeaths_date\":");
-    }
-
-    public static String getMostRecentDateCases(String data){
-        String search = "\"date\":";
-        int endIndex = getLastNumberValueIndex(data, "\"cumulativecases_specimen\":");
-        data = data.substring(0, endIndex);
-        int dateIndex = data.lastIndexOf(search) + search.length();
-        return parseQuote(data, dateIndex);
-
-    }
-
-    public static String getMostRecentDateDeaths(String data){
-        String search = "\"date\":";
-        int endIndex = getLastNumberValueIndex(data, "\"cumulativedeaths_date\":");
-        data = data.substring(0, endIndex);
-        int dateIndex = data.lastIndexOf(search) + search.length();
-        return parseQuote(data, dateIndex);
-    }
-}
-
-class CountyDataRequestReader2 extends DataRequestReader {
     private static long getCount(String data, int instance) {
         String search = "\"casecount-panel-title\">";
         int startIndex = data.indexOf(search) + search.length();
@@ -371,15 +313,15 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             try {
-                String data = new CountyDataRequest2().requestData();
+                String data = new CountyDataRequest().requestData();
                 mainHandler.post(new Runnable() {
                     public void run() {
-                        countyDailyCases.setText(String.format("%d", CountyDataRequestReader2.getDailyCountyCases(data)));
-                        countyCumulativeCases.setText(String.format("%d", CountyDataRequestReader2.getTotalCountyCases(data)));
-                        countyDailyDeaths.setText(String.format("%d", CountyDataRequestReader2.getDailyCountyDeaths(data)));
-                        countyTotalDeaths.setText(String.format("%d", CountyDataRequestReader2.getTotalCountyDeaths(data)));
-                        countyCumulativeRecovered.setText(String.format("%d", CountyDataRequestReader2.getTotalCountyRecovered(data)));
-                        mostRecentCountyDate.setText(String.format("as of %s", CountyDataRequestReader2.getMostRecentDate(data)));
+                        countyDailyCases.setText(String.format("%d", CountyDataRequestReader.getDailyCountyCases(data)));
+                        countyCumulativeCases.setText(String.format("%d", CountyDataRequestReader.getTotalCountyCases(data)));
+                        countyDailyDeaths.setText(String.format("%d", CountyDataRequestReader.getDailyCountyDeaths(data)));
+                        countyTotalDeaths.setText(String.format("%d", CountyDataRequestReader.getTotalCountyDeaths(data)));
+                        countyCumulativeRecovered.setText(String.format("%d", CountyDataRequestReader.getTotalCountyRecovered(data)));
+                        mostRecentCountyDate.setText(String.format("as of %s", CountyDataRequestReader.getMostRecentDate(data)));
                     }
                 });
             } catch (IOException e) {
