@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <Spinner
+        android:id="@+id/city_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cityDate" />
+
+    <TextView
+        android:id="@+id/county"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/county"
+        android:textColor="@color/orange_700"
+        android:textSize="@dimen/title"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/countyDailyCases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultCount"
+        android:textSize="@dimen/count"
+        android:textStyle="bold"
+        android:textColor="@color/orange_500"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/county" />
+
+    <TextView
+        android:id="@+id/countyDailyCasesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_cases"
+        android:textColor="@color/orange_500"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeCases" />
+
+    <TextView
+        android:id="@+id/countyCumulativeCases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultCount"
+        android:textSize="@dimen/count"
+        android:textColor="@color/orange_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/county" />
+
+    <TextView
+        android:id="@+id/countyCumulativeCasesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cumulative_cases"
+        android:textColor="@color/orange_500"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeCases" />
+
+    <TextView
+        android:id="@+id/city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:singleLine="true"
+        android:text="@string/defaultCity"
+        android:textColor="@color/orange_700"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyDate" />
+
+    <TextView
+        android:id="@+id/cityDailyCases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/defaultCount"
+        android:textSize="@dimen/count"
+        android:textStyle="bold"
+        android:textColor="@color/orange_500"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/city" />
+
+    <TextView
+        android:id="@+id/cityDailyLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_cases"
+        android:textColor="@color/orange_500"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cityDailyCases" />
+
+    <TextView
+        android:id="@+id/cityCumulativeCases"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultCount"
+        android:textSize="@dimen/count"
+        android:textColor="@color/orange_500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/city" />
+
+    <TextView
+        android:id="@+id/cityCumulativeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/cumulative_cases"
+        android:textColor="@color/orange_500"
+        android:textAlignment="center"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/cityCumulativeCases" />
+
+    <TextView
+        android:id="@+id/cityDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/defaultDate"
+        android:textSize="@dimen/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cityDailyLabel" />
+
+    <TextView
+        android:id="@+id/countyDailyDeaths"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultCount"
+        android:textColor="@color/teal_700"
+        android:textSize="@dimen/count"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyDailyCasesLabel" />
+
+    <TextView
+        android:id="@+id/countyCumulativeDeaths"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/defaultCount"
+        android:textColor="@color/teal_700"
+        android:textSize="@dimen/count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeCasesLabel" />
+
+    <TextView
+        android:id="@+id/countyDailyDeathsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/daily_deaths"
+        android:textColor="@color/teal_700"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toStartOf="@+id/centerRef"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyDailyDeaths" />
+
+    <TextView
+        android:id="@+id/countyCumulativeDeathsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cumulative_deaths"
+        android:textColor="@color/teal_700"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/centerRef"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeDeaths" />
+
+    <TextView
+        android:id="@+id/countyDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/defaultDate"
+        android:textSize="@dimen/date"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeRecoveredLabel" />
+
+    <TextView
+        android:id="@+id/centerRef"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="30dp" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="2dp"
+        android:text="@string/source"
+        android:textColor="#999999"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/countyCumulativeRecoveredLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cumulative_recovered"
+        android:textColor="@color/green_500"
+        android:textSize="@dimen/label"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyCumulativeRecovered" />
+
+    <TextView
+        android:id="@+id/countyCumulativeRecovered"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/green_500"
+        android:text="@string/defaultCount"
+        android:textSize="@dimen/count"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/countyDailyDeathsLabel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

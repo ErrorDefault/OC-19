@@ -1,0 +1,58 @@
+<resources>
+    <string name="app_name">OC-19</string>
+
+    <string name="cumulative_cases">cumulative cases</string>
+    <string name="daily_cases">daily cases</string>
+    <string name="cumulative_deaths">total deaths</string>
+    <string name="daily_deaths">deaths today</string>
+    <string name="cumulative_recovered">cumulative recovered</string>
+    <string name="county">Orange County</string>
+    <string name="defaultCity">Aliso Viejo</string>
+    <string name="defaultCount">0</string>
+    <string name="defaultDate">as of</string>
+    <string name="source">Source: Orange County Public Works GIS</string>
+
+    <string-array name="city_list">
+        <item>Aliso Viejo</item>
+        <item>Anaheim</item>
+        <item>Brea</item>
+        <item>Buena Park</item>
+        <item>Costa Mesa</item>
+        <item>Coto de Caza</item>
+        <item>Cypress</item>
+        <item>Dana Point</item>
+        <item>Fountain Valley</item>
+        <item>Fullerton</item>
+        <item>Garden Grove</item>
+        <item>Huntington Beach</item>
+        <item>Irvine</item>
+        <item>La Habra</item>
+        <item>La Palma</item>
+        <item>Ladera Ranch</item>
+        <item>Laguna Beach</item>
+        <item>Laguna Hills</item>
+        <item>Laguna Niguel</item>
+        <item>Laguna Woods</item>
+        <item>Lake Forest</item>
+        <item>Los Alamitos</item>
+        <item>Midway City</item>
+        <item>Mission Viejo</item>
+        <item>Newport Beach</item>
+        <item>Orange</item>
+        <item>Placentia</item>
+        <item>Rancho Mission Viejo</item>
+        <item>Rancho Santa Margarita</item>
+        <item>Rossmoor</item>
+        <item>San Clemente</item>
+        <item>San Juan Capistrano</item>
+        <item>Santa Ana</item>
+        <item>Seal Beach</item>
+        <item>Silverado</item>
+        <item>Stanton</item>
+        <item>Trabuco Canyon</item>
+        <item>Tustin</item>
+        <item>Villa Park</item>
+        <item>Westminster</item>
+        <item>Yorba Linda</item>
+    </string-array>
+</resources>
