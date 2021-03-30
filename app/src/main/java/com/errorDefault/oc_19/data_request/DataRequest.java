@@ -17,7 +17,6 @@ public abstract class DataRequest{
         try {
             url = createURL(args);
         } catch (MalformedURLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         HttpURLConnection connection =  (HttpURLConnection) url.openConnection();

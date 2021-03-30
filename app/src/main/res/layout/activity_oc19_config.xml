@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".OC19ConfigActivity">
     <TextView
-        android:padding="8dp"
+        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/orange_500"
@@ -16,9 +16,11 @@
         android:textStyle="bold"
         android:text="@string/select_widget_config"/>
     <FrameLayout
-        android:paddingLeft="8dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        tools:ignore="RtlSymmetry">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/oc19_config_cityList"
             android:layout_width="match_parent"

@@ -11,9 +11,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.TextView;
 
 import com.errorDefault.oc_19.data.OC19ConfigAdapter;
 import com.errorDefault.oc_19.model.City;

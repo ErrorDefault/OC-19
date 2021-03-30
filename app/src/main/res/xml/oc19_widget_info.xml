@@ -7,4 +7,6 @@
     android:previewImage="@drawable/oc19_widget_preview"
     android:updatePeriodMillis="3600000"
     android:configure="com.errorDefault.oc_19.OC19ConfigActivity"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen">
+
+</appwidget-provider>

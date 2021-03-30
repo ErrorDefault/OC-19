@@ -32,15 +32,11 @@ public class OC19ConfigAdapter extends RecyclerView.Adapter<OC19ConfigAdapter.Vi
         public ViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             textView = itemView.findViewById(R.id.item_citySelection);
-            itemView.setOnClickListener(new View.OnClickListener(){
-
-                @Override
-                public void onClick(View v) {
-                    if(listener != null){
-                        int position = getAdapterPosition();
-                        if(position != RecyclerView.NO_POSITION){
-                            listener.onItemClick(position);
-                        }
+            itemView.setOnClickListener(v -> {
+                if(listener != null){
+                    int position = getAdapterPosition();
+                    if(position != RecyclerView.NO_POSITION){
+                        listener.onItemClick(position);
                     }
                 }
             });
