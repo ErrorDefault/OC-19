@@ -1,4 +1,4 @@
-package com.errorDefault.oc_19;
+package com.errorDefault.oc_19.data_request;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-abstract class DataRequest{
+public abstract class DataRequest{
     private static final int CONNECT_TIMEOUT = 5000, READ_TIMEOUT = 5000;
 
     protected abstract URL createURL(String... args) throws MalformedURLException;
@@ -55,22 +55,5 @@ abstract class DataRequest{
 
 }
 
-class CountyDataRequest extends DataRequest {
-    private static final String BASE_URL = "https://occovid19.ochealthinfo.com/coronavirus-in-oc";
-    protected URL createURL(String... args) throws MalformedURLException {
-        return new URL(BASE_URL);
-    }
-}
 
-class CityDataRequest extends DataRequest {
-    private static final String BASE_URL = "https://opendata.arcgis.com/datasets/772f5cdbb99c4f6689ed1460c26f4b05_0/FeatureServer/0/query?";
 
-    protected URL createURL(String ... args) throws MalformedURLException {
-        StringBuilder urlStr = new StringBuilder(BASE_URL);
-        urlStr.append("outFields=");
-        urlStr.append(args[0].replace(' ', '_'));
-        urlStr.append(",DateSpecCollect,Total");
-        System.out.println(urlStr);
-        return new URL(urlStr.toString());
-    }
-}

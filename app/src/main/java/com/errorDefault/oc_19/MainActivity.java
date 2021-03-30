@@ -2,6 +2,7 @@ package com.errorDefault.oc_19;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -17,12 +18,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import java.io.BufferedReader;
+import com.errorDefault.oc_19.data_request.CityDataRequest;
+import com.errorDefault.oc_19.data_request.CityDataRequestReader;
+import com.errorDefault.oc_19.data_request.CountyDataRequest;
+import com.errorDefault.oc_19.data_request.CountyDataRequestReader;
+
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private Spinner citySpinner;
 
-    private Handler mainHandler = new Handler();
+    private final Handler mainHandler = new Handler();
 
     private Map<String, Long[]> cache = new TreeMap<>();
 
@@ -96,17 +97,13 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.refresh:
-                cache = new TreeMap<>();
-                new Thread(new CountyDataRequestRunnable()).start();
-                new Thread(new CityDataRequestRunnable()).start();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
+        if (item.getItemId() == R.id.refresh) {
+            cache = new TreeMap<>();
+            new Thread(new CountyDataRequestRunnable()).start();
+            new Thread(new CityDataRequestRunnable()).start();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
     public void saveData(){
@@ -150,35 +147,27 @@ public class MainActivity extends AppCompatActivity {
 
     class CountyDataRequestRunnable implements Runnable{
 
+        @SuppressLint("DefaultLocale")
         @Override
         public void run() {
             try {
                 String data = new CountyDataRequest().requestData();
-                mainHandler.post(new Runnable() {
-                    public void run() {
-                        countyDailyCases.setText(String.format("%d", CountyDataRequestReader.getDailyCountyCases(data)));
-                        countyCumulativeCases.setText(String.format("%d", CountyDataRequestReader.getTotalCountyCases(data)));
-                        countyDailyDeaths.setText(String.format("%d", CountyDataRequestReader.getDailyCountyDeaths(data)));
-                        countyTotalDeaths.setText(String.format("%d", CountyDataRequestReader.getTotalCountyDeaths(data)));
-                        countyCumulativeRecovered.setText(String.format("%d", CountyDataRequestReader.getTotalCountyRecovered(data)));
-                        mostRecentCountyDate.setText(String.format("as of %s", CountyDataRequestReader.getMostRecentDate(data)));
-                    }
+                mainHandler.post(() -> {
+                    countyDailyCases.setText(String.format("%d", CountyDataRequestReader.getDailyCountyCases(data)));
+                    countyCumulativeCases.setText(String.format("%d", CountyDataRequestReader.getTotalCountyCases(data)));
+                    countyDailyDeaths.setText(String.format("%d", CountyDataRequestReader.getDailyCountyDeaths(data)));
+                    countyTotalDeaths.setText(String.format("%d", CountyDataRequestReader.getTotalCountyDeaths(data)));
+                    countyCumulativeRecovered.setText(String.format("%d", CountyDataRequestReader.getTotalCountyRecovered(data)));
+                    mostRecentCountyDate.setText(String.format("as of %s", CountyDataRequestReader.getMostRecentDate(data)));
                 });
             } catch (IOException e) {
-                mainHandler.post(new Runnable(){
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Unable to retrieve county data.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                mainHandler.post(() -> Toast.makeText(getApplicationContext(), "Unable to retrieve county data.", Toast.LENGTH_LONG).show());
             }
         }
     }
 
     class CityDataRequestRunnable implements Runnable{
-        private Map<String, Integer> monthNumbers = new TreeMap<>();
-        private boolean initialized = false;
+        @SuppressLint("DefaultLocale")
         @Override
         public void run() {
             String selectedCity = citySpinner.getItemAtPosition(citySpinner.getSelectedItemPosition()).toString();
@@ -188,47 +177,17 @@ public class MainActivity extends AppCompatActivity {
                     Long[] cityData = {CityDataRequestReader.getDailyCityCases(data, selectedCity), CityDataRequestReader.getTotalCityCases(data, selectedCity)};
                     cache.put(selectedCity, cityData);
                     if (mostRecentCityCasesDateStr == null)
-                        mostRecentCityCasesDateStr = convertDateFormat(CityDataRequestReader.getMostRecentDate(data));
+                        mostRecentCityCasesDateStr = CityDataRequestReader.getMostRecentDate(data);
                 }
-                mainHandler.post(new Runnable() {
-                    public void run() {
-                        cityDailyCases.setText(cache.get(selectedCity)[0].toString());
-                        cityCumulativeCases.setText(cache.get(selectedCity)[1].toString());
-                        mostRecentCityDate.setText(String.format("as of %s", mostRecentCityCasesDateStr));
-                        city.setText(selectedCity);
-                    }
+                mainHandler.post(() -> {
+                    cityDailyCases.setText(String.format("%d", cache.get(selectedCity)[0]));
+                    cityCumulativeCases.setText(String.format("%d", cache.get(selectedCity)[1]));
+                    mostRecentCityDate.setText(String.format("as of %s", mostRecentCityCasesDateStr));
+                    city.setText(selectedCity);
                 });
             } catch (IOException e){
-                mainHandler.post(new Runnable(){
-
-                    @Override
-                    public void run() {
-                        Toast.makeText(getApplicationContext(), "Unable to retrieve city data.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                mainHandler.post(() -> Toast.makeText(getApplicationContext(), "Unable to retrieve city data.", Toast.LENGTH_LONG).show());
             }
-        }
-
-        private String convertDateFormat(String date){
-            if(!initialized){
-                initialized = true;
-                monthNumbers.put("Jan", 1);
-                monthNumbers.put("Feb", 2);
-                monthNumbers.put("Mar", 3);
-                monthNumbers.put("Apr", 4);
-                monthNumbers.put("May", 5);
-                monthNumbers.put("Jun", 6);
-                monthNumbers.put("Jul", 7);
-                monthNumbers.put("Aug", 8);
-                monthNumbers.put("Sep", 9);
-                monthNumbers.put("Oct", 10);
-                monthNumbers.put("Nov", 11);
-                monthNumbers.put("Dec", 12);
-            }
-            String day = date.substring(0, date.indexOf('-'));
-            String month = date.substring(date.indexOf('-')+1, date.lastIndexOf('-'));
-            String year = "20" + date.substring(date.lastIndexOf('-')+1);
-            return String.format("%d/%s/%s", monthNumbers.get(month), day, year);
         }
     }
 }

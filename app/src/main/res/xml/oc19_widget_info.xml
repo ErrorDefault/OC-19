@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/oc19_widget"
+    android:initialLayout="@layout/oc19_widget"
+    android:minWidth="300dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/oc19_widget_preview"
+    android:updatePeriodMillis="3600000"
+    android:configure="com.errorDefault.oc_19.OC19ConfigActivity"
+    android:widgetCategory="home_screen"></appwidget-provider>

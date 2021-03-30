@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">OC-19</string>
 
+    <string name="daily">Daily Cases</string>
+    <string name="total">Total Cases</string>
     <string name="cumulative_cases">cumulative cases</string>
     <string name="daily_cases">daily cases</string>
     <string name="cumulative_deaths">total deaths</string>
@@ -10,7 +12,9 @@
     <string name="defaultCity">Aliso Viejo</string>
     <string name="defaultCount">0</string>
     <string name="defaultDate">as of</string>
-    <string name="source">Source: Orange County Public Works GIS</string>
+    <string name="defaultDateWidget">1/1/1970</string>
+    <string name="source">Source: Orange County Public Works</string>
+    <string name="select_widget_config">Choose a location whose case counts your widget will track.</string>
 
     <string-array name="city_list">
         <item>Aliso Viejo</item>
@@ -55,4 +59,6 @@
         <item>Westminster</item>
         <item>Yorba Linda</item>
     </string-array>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 </resources>
