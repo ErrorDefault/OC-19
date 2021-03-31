@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,25 +20,6 @@ public class OC19Widget extends AppWidgetProvider {
 
     public static final String CITY_DAILY_CASES = "cdca", CITY_CUMUL_CASES = "ccca", CITY_DATE = "cda";
 
-    @SuppressLint("DefaultLocale")
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
-
-        SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
-        String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCity));
-        String cityDaily = widgetPrefs.getString(CITY_DAILY_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
-        String cityTotal = widgetPrefs.getString(CITY_CUMUL_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
-        String date = widgetPrefs.getString(CITY_DATE + appWidgetId, context.getResources().getString(R.string.defaultDateWidget));
-        // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
-        views.setTextViewText(R.id.oc19_widget_selectedCity, selectedCity);
-        views.setTextViewText(R.id.oc19_widget_daily, cityDaily);
-        views.setTextViewText(R.id.oc19_widget_total, cityTotal);
-        views.setTextViewText(R.id.oc19_widget_date, date);
-
-        new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context.getResources().getString(R.string.county))).start();
-    }
-
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds) {
         // There may be multiple widgets active, so update all of them
@@ -45,17 +27,36 @@ public class OC19Widget extends AppWidgetProvider {
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+            SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
+            String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCity));
+            String cityDaily = widgetPrefs.getString(CITY_DAILY_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
+            String cityTotal = widgetPrefs.getString(CITY_CUMUL_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
+            String date = widgetPrefs.getString(CITY_DATE + appWidgetId, context.getResources().getString(R.string.defaultDateWidget));
+
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
             views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            updateAppWidget(context, appWidgetManager, appWidgetId);
+
+            views.setTextViewText(R.id.oc19_widget_selectedCity, selectedCity);
+            views.setTextViewText(R.id.oc19_widget_daily, cityDaily);
+            views.setTextViewText(R.id.oc19_widget_total, cityTotal);
+            views.setTextViewText(R.id.oc19_widget_date, date);
+
+            new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context.getResources().getString(R.string.county))).start();
         }
     }
 
     @Override
+    public void onReceive(Context context, Intent intent){
+
+    }
+
+    @Override
     public void onEnabled(Context context) {
-        // Enter relevant functionality for when the first widget is created
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        ComponentName componentName = new ComponentName(context.getPackageName(), OC19Widget.class.getName());
+        onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(componentName));
     }
 
     @Override
