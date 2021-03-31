@@ -3,6 +3,7 @@
     package="com.errorDefault.oc_19">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -13,8 +14,9 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.OC19">
-        <receiver android:name=".OC19Widget">
+        <receiver android:name=".OC19Widget" android:enabled="true" android:exported="true">
             <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 

@@ -10,6 +10,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.widget.RemoteViews;
 
 import java.io.IOException;
@@ -29,30 +30,34 @@ public class OC19Widget extends AppWidgetProvider {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
             views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
-            /**/
             SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
             String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCity));
             String cityDaily = widgetPrefs.getString(CITY_DAILY_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String cityTotal = widgetPrefs.getString(CITY_CUMUL_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String date = widgetPrefs.getString(CITY_DATE + appWidgetId, context.getResources().getString(R.string.defaultDateWidget));
-            /**/
-            /**/
             views.setTextViewText(R.id.oc19_widget_selectedCity, selectedCity);
             views.setTextViewText(R.id.oc19_widget_daily, cityDaily);
             views.setTextViewText(R.id.oc19_widget_total, cityTotal);
             views.setTextViewText(R.id.oc19_widget_date, date);
-            /**/
             appWidgetManager.updateAppWidget(appWidgetId, views);
-            /**/
+
             new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context.getResources().getString(R.string.county))).start();
-            /**/
-            //updateAppWidget(context, appWidgetManager, appWidgetId);
         }
     }
 
     @Override
     public void onReceive(Context context, Intent intent){
-
+        super.onReceive(context, intent);
+        String action = intent.getAction();
+        if(action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+            Bundle extras = intent.getExtras();
+            if (extras != null) {
+                AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+                ComponentName thisAppWidget = new ComponentName(context.getPackageName(), OC19Widget.class.getName());
+                int[] appWidgetIds = appWidgetManager.getAppWidgetIds(thisAppWidget);
+                onUpdate(context, appWidgetManager, appWidgetIds);
+            }
+        }
     }
 
     @Override
