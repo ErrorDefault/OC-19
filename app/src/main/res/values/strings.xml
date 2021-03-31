@@ -10,9 +10,10 @@
     <string name="cumulative_recovered">cumulative recovered</string>
     <string name="county">Orange County</string>
     <string name="defaultCity">Aliso Viejo</string>
+    <string name="defaultCityWidget">-</string>
     <string name="defaultCount">0</string>
     <string name="defaultDate">as of</string>
-    <string name="defaultDateWidget">1/1/1970</string>
+    <string name="defaultDateWidget">-/-/----</string>
     <string name="source">Source: Orange County Public Works</string>
     <string name="select_widget_config">Choose a location whose case counts your widget will track.</string>
 

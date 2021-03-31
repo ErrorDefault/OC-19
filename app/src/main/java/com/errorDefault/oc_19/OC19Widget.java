@@ -31,7 +31,7 @@ public class OC19Widget extends AppWidgetProvider {
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
             views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
             SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
-            String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCity));
+            String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCityWidget));
             String cityDaily = widgetPrefs.getString(CITY_DAILY_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String cityTotal = widgetPrefs.getString(CITY_CUMUL_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String date = widgetPrefs.getString(CITY_DATE + appWidgetId, context.getResources().getString(R.string.defaultDateWidget));
@@ -41,7 +41,7 @@ public class OC19Widget extends AppWidgetProvider {
             views.setTextViewText(R.id.oc19_widget_date, date);
             appWidgetManager.updateAppWidget(appWidgetId, views);
 
-            new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context.getResources().getString(R.string.county))).start();
+            new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context)).start();
         }
     }
 
@@ -61,38 +61,47 @@ public class OC19Widget extends AppWidgetProvider {
     }
 
     @Override
-    public void onEnabled(Context context) {
-    }
-
-    @Override
-    public void onDisabled(Context context) {
-        // Enter relevant functionality for when the last widget is disabled
+    public void onDeleted(Context context, int[] appWidgetIds){
+        for (int appWidgetId : appWidgetIds) {
+            SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
+            SharedPreferences.Editor editor = widgetPrefs.edit();
+            editor.remove(OC19ConfigActivity.SELECTED_CITY + appWidgetId);
+            editor.remove(CITY_DAILY_CASES + appWidgetId);
+            editor.remove(CITY_CUMUL_CASES + appWidgetId);
+            editor.remove(CITY_DATE + appWidgetId);
+            editor.apply();
+        }
     }
 
     public static class DataRequestRunnable implements Runnable{
         RemoteViews views;
         SharedPreferences widgetPrefs;
         AppWidgetManager appWidgetManager;
-        String countyName;
         int appWidgetId;
-        public DataRequestRunnable(RemoteViews views, SharedPreferences widgetPrefs, int appWidgetId,  AppWidgetManager appWidgetManager, String countyName){
+        Context context;
+        public DataRequestRunnable(RemoteViews views, SharedPreferences widgetPrefs, int appWidgetId,  AppWidgetManager appWidgetManager, Context context){
             this.views = views;
             this.widgetPrefs = widgetPrefs;
             this.appWidgetId = appWidgetId;
             this.appWidgetManager = appWidgetManager;
-            this.countyName = countyName;
+            this.context = context;
         }
         @SuppressLint("DefaultLocale")
         @Override
         public void run() {
                 try{
-                    String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, "Aliso Viejo");
+                    String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCityWidget));
+                    SharedPreferences.Editor editor = widgetPrefs.edit();
+                    editor.putString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, selectedCity);
+                    editor.apply();
                     String cityData, cityDaily, cityTotal, date;
-                    if(selectedCity.equals(countyName)) {
-                        cityData = new CountyDataRequest().requestData(selectedCity);
+                    if(selectedCity.equals(context.getResources().getString(R.string.county))) {
+                        cityData = new CountyDataRequest().requestData();
                         cityDaily = String.format("%d", CountyDataRequestReader.getDailyCountyCases(cityData));
                         cityTotal = String.format("%d", CountyDataRequestReader.getTotalCountyCases(cityData));
                         date = CountyDataRequestReader.getMostRecentDate(cityData);
+                    } else if(selectedCity.equals(context.getResources().getString(R.string.defaultCityWidget))){
+                        throw new IOException();
                     } else {
                         cityData = new CityDataRequest().requestData(selectedCity);
                         cityDaily = String.format("%d", CityDataRequestReader.getDailyCityCases(cityData, selectedCity));
@@ -100,8 +109,6 @@ public class OC19Widget extends AppWidgetProvider {
                         date = CityDataRequestReader.getMostRecentDate(cityData);
                     }
 
-                    SharedPreferences.Editor editor = widgetPrefs.edit();
-                    editor.putString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, selectedCity);
                     editor.putString(CITY_DAILY_CASES + appWidgetId, cityDaily);
                     editor.putString(CITY_CUMUL_CASES + appWidgetId, cityTotal);
                     editor.putString(CITY_DATE + appWidgetId, date);

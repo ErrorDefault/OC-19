@@ -2,6 +2,8 @@ package com.errorDefault.oc_19.model;
 
 import android.content.Context;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 
 public class City {
@@ -20,5 +22,10 @@ public class City {
         String[] cRaces = context.getResources().getStringArray(id);
         for (String cRace : cRaces) cityList.add(new City(cRace));
         return cityList;
+    }
+
+    @NotNull
+    public String toString(){
+        return cityName;
     }
 }

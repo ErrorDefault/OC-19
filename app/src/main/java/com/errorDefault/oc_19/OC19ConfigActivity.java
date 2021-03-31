@@ -67,12 +67,13 @@ public class OC19ConfigActivity extends AppCompatActivity {
 
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
             views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
+            views.setTextViewText(R.id.oc19_widget_selectedCity, selectedCity.getCityName());
             appWidgetManager.updateAppWidget(appWidgetId, views);
             SharedPreferences prefs = getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putString(SELECTED_CITY + appWidgetId, selectedCity.getCityName());
             editor.apply();
-            new Thread(new OC19Widget.DataRequestRunnable(views, prefs, appWidgetId, appWidgetManager, getResources().getString(R.string.county))).start();
+            new Thread(new OC19Widget.DataRequestRunnable(views, prefs, appWidgetId, appWidgetManager, context)).start();
 
             Intent resultValue1 = new Intent();
             resultValue1.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
