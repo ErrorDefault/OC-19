@@ -27,21 +27,21 @@ public class OC19Widget extends AppWidgetProvider {
             Intent intent = new Intent(context, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
 
+            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
+            views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
+
             SharedPreferences widgetPrefs = context.getSharedPreferences(OC19ConfigActivity.SHARED_PREFS, MODE_PRIVATE);
             String selectedCity = widgetPrefs.getString(OC19ConfigActivity.SELECTED_CITY + appWidgetId, context.getResources().getString(R.string.defaultCity));
             String cityDaily = widgetPrefs.getString(CITY_DAILY_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String cityTotal = widgetPrefs.getString(CITY_CUMUL_CASES + appWidgetId, context.getResources().getString(R.string.defaultCount));
             String date = widgetPrefs.getString(CITY_DATE + appWidgetId, context.getResources().getString(R.string.defaultDateWidget));
 
-            RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.oc19_widget);
-            views.setOnClickPendingIntent(R.id.oc19_widget, pendingIntent);
-
-            appWidgetManager.updateAppWidget(appWidgetId, views);
-
             views.setTextViewText(R.id.oc19_widget_selectedCity, selectedCity);
             views.setTextViewText(R.id.oc19_widget_daily, cityDaily);
             views.setTextViewText(R.id.oc19_widget_total, cityTotal);
             views.setTextViewText(R.id.oc19_widget_date, date);
+
+            appWidgetManager.updateAppWidget(appWidgetId, views);
 
             new Thread(new DataRequestRunnable(views, widgetPrefs, appWidgetId, appWidgetManager, context.getResources().getString(R.string.county))).start();
         }
@@ -54,9 +54,7 @@ public class OC19Widget extends AppWidgetProvider {
 
     @Override
     public void onEnabled(Context context) {
-        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-        ComponentName componentName = new ComponentName(context.getPackageName(), OC19Widget.class.getName());
-        onUpdate(context, appWidgetManager, appWidgetManager.getAppWidgetIds(componentName));
+
     }
 
     @Override

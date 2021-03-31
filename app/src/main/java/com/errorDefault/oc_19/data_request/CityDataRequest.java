@@ -4,10 +4,13 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 public class CityDataRequest extends DataRequest {
-    private static final String BASE_URL = "https://ochca.maps.arcgis.com/apps/opsdashboard/index.html#/5839a554eaac45c2b8e05dacc74c3bec";
+    private static final String BASE_URL = "https://opendata.arcgis.com/datasets/772f5cdbb99c4f6689ed1460c26f4b05_0/FeatureServer/0/query?";
 
-    @Override
-    protected URL createURL(String... args) throws MalformedURLException {
-        return new URL(BASE_URL);
+    protected URL createURL(String ... args) throws MalformedURLException {
+        StringBuilder urlStr = new StringBuilder(BASE_URL);
+        urlStr.append("outFields=");
+        urlStr.append(args[0].replace(' ', '_'));
+        urlStr.append(",DateSpecCollect,Total");
+        return new URL(urlStr.toString());
     }
 }

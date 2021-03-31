@@ -10,22 +10,17 @@ public class CityDataRequestReader extends DataRequestReader {
     private static boolean initialized = false;
 
     public static long getTotalCityCases(String data, String cityName) {
-        int startIndex = data.indexOf(cityName);
-        System.out.println("City Index: " + startIndex);
-        data = data.substring(startIndex);
-        String search = "-&nbsp;";
+        String search = String.format("\"%s\":", cityName.replace(' ', '_'));
         int totalIndex = data.lastIndexOf(search) + search.length();
-        System.out.println("Total Index: " + totalIndex);
-        return 0;
+        return parseNumber(data, totalIndex);
     }
 
     public static long getDailyCityCases(String data, String cityName) {
-        /*String search = String.format("\"%s\":", cityName.replace(' ', '_'));
+        String search = String.format("\"%s\":", cityName.replace(' ', '_'));
         int endIndex = data.lastIndexOf(search);
         data = data.substring(0, endIndex);
         int totalIndex = data.lastIndexOf(search) + search.length();
-        return parseNumber(data, totalIndex);*/
-        return 0;
+        return parseNumber(data, totalIndex);
     }
 
     @SuppressLint("DefaultLocale")
@@ -52,8 +47,10 @@ public class CityDataRequestReader extends DataRequestReader {
     }
 
     public static String getMostRecentDate(String data) {
-        String search = "Updated: ";
-        int startIndex = data.indexOf(search) + search.length();
-        return parse(data, startIndex, '<');
+        String search = "\"DateSpecCollect\":";
+        int endIndex = data.lastIndexOf(search);
+        data = data.substring(0, endIndex);
+        int dateIndex = data.lastIndexOf(search) + search.length();
+        return convertDateFormat(parseQuote(data, dateIndex));
     }
 }
