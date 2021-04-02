@@ -8,12 +8,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        vectorDrawables.useSupportLibrary = true
         applicationId "com.errorDefault.oc_19"
         minSdkVersion 16
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 3
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

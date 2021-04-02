@@ -7,6 +7,10 @@
     <string name="daily_cases">daily cases</string>
     <string name="cumulative_deaths">total deaths</string>
     <string name="daily_deaths">deaths today</string>
+    <string name="daily_tests">tests today</string>
+    <string name="cumulative_tests">cumulative tests</string>
+    <string name="icu">cases in ICU</string>
+    <string name="hospitalized">cases hospitalized</string>
     <string name="cumulative_recovered">cumulative recovered</string>
     <string name="county">Orange County</string>
     <string name="defaultCity">Aliso Viejo</string>
@@ -14,7 +18,8 @@
     <string name="defaultCount">0</string>
     <string name="defaultDate">as of</string>
     <string name="defaultDateWidget">-/-/----</string>
-    <string name="source">Source: Orange County Public Works</string>
+    <string name="city_source">Source: OC Public Works</string>
+    <string name="county_source">Source: OC Health Care Agency</string>
     <string name="select_widget_config">Choose a location whose case counts your widget will track.</string>
 
     <string-array name="city_list">

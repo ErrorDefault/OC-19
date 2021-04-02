@@ -32,6 +32,14 @@ public class CountyDataRequestReader extends DataRequestReader {
         return getCount(data, 9);
     }
 
+    public static long getTotalCountyTests(String data){ return getCount(data, 5); }
+
+    public static long getDailyCountyTests(String data){ return getCount(data, 6); }
+
+    public static long getCurrentHospitalized(String data){ return getCount(data, 7); }
+
+    public static long getCurrentICU(String data){ return getCount(data, 8); }
+
     public static String getMostRecentDate(String data){
         String search = "Posted Date: ";
         int startIndex = data.indexOf(search) + search.length();
