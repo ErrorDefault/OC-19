@@ -18,10 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.errorDefault.oc_19.data_request.CityDataRequest;
-import com.errorDefault.oc_19.data_request.CityDataRequestReader;
-import com.errorDefault.oc_19.data_request.CountyDataRequest;
-import com.errorDefault.oc_19.data_request.CountyDataRequestReader;
+import com.errorDefault.oc_19.data_request.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -30,15 +27,17 @@ import java.util.TreeMap;
 public class MainActivity extends AppCompatActivity {
     public static final String SHARED_PREFS = "sharedPrefs", CITY = "city", CITY_DAILY_CASES = "cidc", CITY_CUMUL_CASES = "cicc",
             COUNTY_DAILY_CASES = "codc", COUNTY_CUMUL_CASES = "cocc", COUNTY_DAILY_DEATHS = "codd", COUNTY_TOTAL_DEATHS = "cotd",
-            COUNTY_CUMUL_RECOVERED = "cocr", COUNTY_DAILY_TESTS = "codt", COUNTY_CUMUL_TESTS = "coct", COUNTY_ICU = "cicu",
-            COUNTY_HOSPITALIZED = "coh", COUNTY_DATE = "coda", CITY_DATE = "cida";
+            COUNTY_CUMUL_RECOVERED = "cocr", COUNTY_DAILY_TESTS = "codt", COUNTY_CUMUL_TESTS = "coct", COUNTY_ICU = "cicu", COUNTY_HOSPITALIZED = "coh",
+            COUNTY_POPULATION = "cop", COUNTY_ONE_DOSE = "od", COUNTY_TWO_DOSES = "td",
+            VACCINE_DATE = "vda", COUNTY_DATE = "coda", CITY_DATE = "cida";
 
     private String mostRecentCityCasesDateStr = null;
 
     private TextView cityDailyCases, cityCumulativeCases, city,
             countyDailyCases, countyCumulativeCases, countyDailyDeaths, countyTotalDeaths,
-            countyDailyTests, countyCumulativeTests, countyICU, countyHospitalized,
-            countyCumulativeRecovered, mostRecentCountyDate, mostRecentCityDate;
+            countyDailyTests, countyCumulativeTests, countyICU, countyHospitalized, countyCumulativeRecovered,
+            countyPopulation, countyOneDose, countyOneDosePercentage, countyTwoDoses, countyTwoDosesPercentage,
+            mostRecentCountyDate, mostRecentCityDate, mostRecentVaccineDate;
 
     private Spinner citySpinner;
 
@@ -55,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         cityDailyCases = findViewById(R.id.cityDailyCases);
         cityCumulativeCases = findViewById(R.id.cityCumulativeCases);
         city = findViewById(R.id.city);
+
         countyDailyCases = findViewById(R.id.countyDailyCases);
         countyCumulativeCases = findViewById(R.id.countyCumulativeCases);
         countyDailyDeaths = findViewById(R.id.countyDailyDeaths);
@@ -64,8 +64,16 @@ public class MainActivity extends AppCompatActivity {
         countyICU = findViewById(R.id.countyICU);
         countyHospitalized = findViewById(R.id.countyHospitalized);
         countyCumulativeRecovered = findViewById(R.id.countyCumulativeRecovered);
+
+        countyPopulation = findViewById(R.id.countyPopulation);
+        countyOneDose = findViewById(R.id.countyOneDose);
+        countyOneDosePercentage = findViewById(R.id.countyOneDosePercentage);
+        countyTwoDoses = findViewById(R.id.countyTwoDoses);
+        countyTwoDosesPercentage = findViewById(R.id.countyTwoDosesPercentage);
+
         mostRecentCityDate = findViewById(R.id.cityDate);
         mostRecentCountyDate = findViewById(R.id.countyDate);
+        mostRecentVaccineDate = findViewById(R.id.vaccineDate);
         // Initialize City Selector Spinner
         citySpinner = findViewById(R.id.city_spinner);
         ArrayAdapter<CharSequence> citySpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.city_list, android.R.layout.simple_spinner_item);
@@ -88,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadData();
         new Thread(new CountyDataRequestRunnable()).start();
+        new Thread(new VaccineDataRequestRunnable()).start();
     }
 
     @Override
@@ -107,8 +116,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.refresh) {
             cache = new TreeMap<>();
-            new Thread(new CountyDataRequestRunnable()).start();
             new Thread(new CityDataRequestRunnable()).start();
+            new Thread(new CountyDataRequestRunnable()).start();
+            new Thread(new VaccineDataRequestRunnable()).start();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -131,8 +141,13 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(COUNTY_HOSPITALIZED, countyHospitalized.getText().toString());
         editor.putString(COUNTY_CUMUL_RECOVERED, countyCumulativeRecovered.getText().toString());
 
+        editor.putString(COUNTY_POPULATION, countyPopulation.getText().toString());
+        editor.putString(COUNTY_ONE_DOSE, countyOneDose.getText().toString());
+        editor.putString(COUNTY_TWO_DOSES, countyTwoDoses.getText().toString());
+
         editor.putString(COUNTY_DATE, mostRecentCountyDate.getText().toString());
         editor.putString(CITY_DATE, mostRecentCityDate.getText().toString());
+        editor.putString(VACCINE_DATE, mostRecentVaccineDate.getText().toString());
         editor.apply();
     }
 
@@ -142,6 +157,12 @@ public class MainActivity extends AppCompatActivity {
                 return i;
         }
         return 0;
+    }
+
+    private String formatPercentage(long num, long denom){
+        if(denom == 0)
+            return "0.00%";
+        return String.format("%.2f", (double)num / denom * 100) + "%";
     }
 
     public void loadData(){
@@ -154,16 +175,51 @@ public class MainActivity extends AppCompatActivity {
         countyCumulativeCases.setText(sharedPreferences.getString(COUNTY_CUMUL_CASES, "0"));
         countyDailyDeaths.setText(sharedPreferences.getString(COUNTY_DAILY_DEATHS, "0"));
         countyTotalDeaths.setText(sharedPreferences.getString(COUNTY_TOTAL_DEATHS, "0"));
-        countyDailyTests.setText(sharedPreferences.getString(COUNTY_DAILY_CASES, "0"));
+        countyDailyTests.setText(sharedPreferences.getString(COUNTY_DAILY_TESTS, "0"));
         countyCumulativeTests.setText(sharedPreferences.getString(COUNTY_CUMUL_TESTS, "0"));
         countyICU.setText(sharedPreferences.getString(COUNTY_ICU, "0"));
         countyHospitalized.setText(sharedPreferences.getString(COUNTY_HOSPITALIZED, "0"));
         countyCumulativeRecovered.setText(sharedPreferences.getString(COUNTY_CUMUL_RECOVERED, "0"));
 
+        countyPopulation.setText(sharedPreferences.getString(COUNTY_POPULATION, "0"));
+        countyOneDose.setText(sharedPreferences.getString(COUNTY_ONE_DOSE, "0"));
+        countyTwoDoses.setText(sharedPreferences.getString(COUNTY_TWO_DOSES, "0"));
+        long countyPopulationL = Long.parseLong(countyPopulation.getText().toString());
+        long countyOneDoseL = Long.parseLong(countyOneDose.getText().toString());
+        long countyTwoDosesL = Long.parseLong(countyTwoDoses.getText().toString());
+        countyOneDosePercentage.setText(formatPercentage(countyOneDoseL, countyPopulationL));
+        countyTwoDosesPercentage.setText(formatPercentage(countyTwoDosesL, countyPopulationL));
+
         mostRecentCountyDate.setText(sharedPreferences.getString(COUNTY_DATE, "as of"));
         mostRecentCityDate.setText(sharedPreferences.getString(CITY_DATE, "as of"));
+        mostRecentVaccineDate.setText(sharedPreferences.getString(VACCINE_DATE, "as of"));
 
         citySpinner.setSelection(getIndexByValue(citySpinner, city.getText().toString()));
+    }
+
+    class CityDataRequestRunnable implements Runnable{
+        @SuppressLint("DefaultLocale")
+        @Override
+        public void run() {
+            String selectedCity = citySpinner.getItemAtPosition(citySpinner.getSelectedItemPosition()).toString();
+            try {
+                if (!cache.containsKey(selectedCity)) {
+                    String data = new CityDataRequest().requestData(selectedCity);
+                    Long[] cityData = {CityDataRequestReader.getDailyCityCases(data, selectedCity), CityDataRequestReader.getTotalCityCases(data, selectedCity)};
+                    cache.put(selectedCity, cityData);
+                    if (mostRecentCityCasesDateStr == null)
+                        mostRecentCityCasesDateStr = CityDataRequestReader.getMostRecentDate(data);
+                }
+                mainHandler.post(() -> {
+                    cityDailyCases.setText(String.format("%d", cache.get(selectedCity)[0]));
+                    cityCumulativeCases.setText(String.format("%d", cache.get(selectedCity)[1]));
+                    mostRecentCityDate.setText(String.format("as of %s", mostRecentCityCasesDateStr));
+                    city.setText(selectedCity);
+                });
+            } catch (IOException e){
+                mainHandler.post(() -> Toast.makeText(getApplicationContext(), "Unable to retrieve city data.", Toast.LENGTH_LONG).show());
+            }
+        }
     }
 
     class CountyDataRequestRunnable implements Runnable{
@@ -195,27 +251,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    class CityDataRequestRunnable implements Runnable{
-        @SuppressLint("DefaultLocale")
+    class VaccineDataRequestRunnable implements Runnable{
+
         @Override
         public void run() {
-            String selectedCity = citySpinner.getItemAtPosition(citySpinner.getSelectedItemPosition()).toString();
             try {
-                if (!cache.containsKey(selectedCity)) {
-                    String data = new CityDataRequest().requestData(selectedCity);
-                    Long[] cityData = {CityDataRequestReader.getDailyCityCases(data, selectedCity), CityDataRequestReader.getTotalCityCases(data, selectedCity)};
-                    cache.put(selectedCity, cityData);
-                    if (mostRecentCityCasesDateStr == null)
-                        mostRecentCityCasesDateStr = CityDataRequestReader.getMostRecentDate(data);
-                }
+                String data = new VaccineDataRequest().requestData();
                 mainHandler.post(() -> {
-                    cityDailyCases.setText(String.format("%d", cache.get(selectedCity)[0]));
-                    cityCumulativeCases.setText(String.format("%d", cache.get(selectedCity)[1]));
-                    mostRecentCityDate.setText(String.format("as of %s", mostRecentCityCasesDateStr));
-                    city.setText(selectedCity);
+                    countyPopulation.setText(String.format("%d", VaccineDataRequestReader.getPopulation(data)));
+
+                    countyOneDose.setText(String.format("%d", VaccineDataRequestReader.getOneDose(data)));
+                    countyTwoDoses.setText(String.format("%d", VaccineDataRequestReader.getTwoDoses(data)));
+
+
+                    long countyPopulationL = Long.parseLong(countyPopulation.getText().toString());
+                    long countyOneDoseL = Long.parseLong(countyOneDose.getText().toString());
+                    long countyTwoDosesL = Long.parseLong(countyTwoDoses.getText().toString());
+                    countyOneDosePercentage.setText(formatPercentage(countyOneDoseL, countyPopulationL));
+                    countyTwoDosesPercentage.setText(formatPercentage(countyTwoDosesL, countyPopulationL));
+
+                    mostRecentVaccineDate.setText(String.format("as of %s", VaccineDataRequestReader.getMostRecentDate(data)));
                 });
-            } catch (IOException e){
-                mainHandler.post(() -> Toast.makeText(getApplicationContext(), "Unable to retrieve city data.", Toast.LENGTH_LONG).show());
+            } catch (IOException e) {
+                mainHandler.post(() -> Toast.makeText(getApplicationContext(), "Unable to retrieve vaccine data.", Toast.LENGTH_LONG).show());
             }
         }
     }

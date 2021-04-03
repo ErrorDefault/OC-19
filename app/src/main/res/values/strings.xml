@@ -13,13 +13,19 @@
     <string name="hospitalized">cases hospitalized</string>
     <string name="cumulative_recovered">cumulative recovered</string>
     <string name="county">Orange County</string>
+    <string name="vaccine">Vaccine Data</string>
     <string name="defaultCity">Aliso Viejo</string>
     <string name="defaultCityWidget">-</string>
     <string name="defaultCount">0</string>
     <string name="defaultDate">as of</string>
     <string name="defaultDateWidget">-/-/----</string>
+    <string name="defaultPercentage">-.--%</string>
+    <string name="total_population">total population</string>
+    <string name="one_dose">with one dose</string>
+    <string name="two_doses">with two doses</string>
     <string name="city_source">Source: OC Public Works</string>
     <string name="county_source">Source: OC Health Care Agency</string>
+    <string name="vaccine_source">Source: Democrat and Chronicle (CDC)</string>
     <string name="select_widget_config">Choose a location whose case counts your widget will track.</string>
 
     <string-array name="city_list">
