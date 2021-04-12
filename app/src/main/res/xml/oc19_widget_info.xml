@@ -5,7 +5,7 @@
     android:minWidth="300dp"
     android:minHeight="40dp"
     android:previewImage="@drawable/oc19_widget_preview"
-    android:updatePeriodMillis="3600000"
+    android:updatePeriodMillis="1800000"
     android:configure="com.errorDefault.oc_19.OC19ConfigActivity"
     android:widgetCategory="home_screen">
 
