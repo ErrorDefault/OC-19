@@ -60,7 +60,7 @@
                 android:gravity="center"
                 android:text="@string/defaultPercentage"
                 android:textColor="@color/teal_700"
-                android:textSize="@dimen/title"
+                android:textSize="@dimen/percentage_widget"
                 android:textStyle="bold" />
             <TextView
                 android:layout_width="match_parent"
@@ -86,7 +86,7 @@
                 android:gravity="center"
                 android:text="@string/defaultPercentage"
                 android:textColor="@color/teal_700"
-                android:textSize="@dimen/title"
+                android:textSize="@dimen/percentage_widget"
                 android:textStyle="bold" />
             <TextView
                 android:layout_width="match_parent"
