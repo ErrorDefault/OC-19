@@ -408,7 +408,6 @@
             android:text="@string/defaultCount"
             android:textColor="@color/green_500"
             android:textSize="@dimen/count"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/centerRef"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/countyPopulationLabel" />

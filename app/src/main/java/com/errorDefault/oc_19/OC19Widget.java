@@ -49,7 +49,7 @@ public class OC19Widget extends AppWidgetProvider {
     public void onReceive(Context context, Intent intent){
         super.onReceive(context, intent);
         String action = intent.getAction();
-        if(action.equals(Intent.ACTION_BOOT_COMPLETED)) {
+        if(action.equals(Intent.ACTION_BOOT_COMPLETED) || action.equals(MainActivity.CASE_COUNT_UPDATE_ACTION)) {
             Bundle extras = intent.getExtras();
             if (extras != null) {
                 AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);

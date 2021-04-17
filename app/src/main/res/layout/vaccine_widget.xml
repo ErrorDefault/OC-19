@@ -6,32 +6,30 @@
     android:padding="@dimen/widget_margin"
     android:orientation="vertical"
     android:weightSum="8"
-    android:id="@+id/oc19_widget"
+    android:id="@+id/vaccine_widget"
     android:theme="@style/ThemeOverlay.OC19.AppWidgetContainer">
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/orange_500"
+        android:background="@color/teal_700"
         android:layout_weight="5"
         android:weightSum="8"
         android:orientation="horizontal">
         <TextView
             android:layout_weight="4"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/oc19_widget_selectedCity"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="@string/defaultCityWidget"
+            android:text="@string/vaccine_widget"
             android:textColor="@color/white"
             android:textSize="@dimen/date"
             android:textStyle="bold" />
         <TextView
             android:layout_weight="4"
             android:layout_gravity="center_horizontal"
-            android:id="@+id/oc19_widget_date"
+            android:id="@+id/vaccine_widget_date"
             android:gravity="center"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -55,23 +53,22 @@
             android:weightSum="3"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/oc19_widget_daily"
+                android:id="@+id/vaccine_widget_two"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/defaultCount"
-                android:textColor="@color/orange_500"
+                android:text="@string/defaultPercentage"
+                android:textColor="@color/teal_700"
                 android:textSize="@dimen/title"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/oc19_widget_dailyLabel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="@string/daily"
-                android:textColor="@color/orange_500"
+                android:text="@string/two_doses_widget"
+                android:textColor="@color/teal_700"
                 android:textSize="@dimen/label" />
 
         </LinearLayout>
@@ -82,23 +79,22 @@
             android:weightSum="3"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/oc19_widget_total"
+                android:id="@+id/vaccine_widget_one"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/defaultCount"
-                android:textColor="@color/orange_500"
+                android:text="@string/defaultPercentage"
+                android:textColor="@color/teal_700"
                 android:textSize="@dimen/title"
                 android:textStyle="bold" />
             <TextView
-                android:id="@+id/oc19_widget_totalLabel"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:gravity="center_horizontal"
-                android:text="@string/total"
-                android:textColor="@color/orange_500"
+                android:text="@string/one_dose_widget"
+                android:textColor="@color/teal_700"
                 android:textSize="@dimen/label" />
 
         </LinearLayout>

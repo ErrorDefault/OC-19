@@ -14,9 +14,27 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@style/Theme.OC19">
-        <receiver android:name=".OC19Widget" android:enabled="true" android:exported="true">
+        <receiver
+            android:name=".VaccineWidget"
+            android:enabled="true"
+            android:exported="true"
+            android:label="Vaccine Data">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="andorid.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/vaccine_widget_info" />
+        </receiver>
+        <receiver
+            android:name=".OC19Widget"
+            android:enabled="true"
+            android:exported="true"
+            android:label="Case Counts">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
 
@@ -27,10 +45,9 @@
 
         <activity android:name=".OC19ConfigActivity">
             <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop">
