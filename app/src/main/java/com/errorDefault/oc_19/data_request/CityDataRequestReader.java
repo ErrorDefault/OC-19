@@ -17,7 +17,7 @@ public class CityDataRequestReader extends DataRequestReader {
 
         while(mostRecentDates.size() < 7){
             String date_str = convertDateFormatDMY(today);
-            if(data.indexOf(date_str) != -1){
+            if(data.contains(date_str)){
                 mostRecentDates.add(date_str);
             }
             today = today.minusDays(1);
@@ -69,6 +69,7 @@ public class CityDataRequestReader extends DataRequestReader {
         return convertDateFormatDMY(date.getDayOfMonth(), date.getMonthValue(), date.getYear());
     }
 
+    @SuppressLint("DefaultLocale")
     private static String convertDateFormatDMY(int day, int month, int year){
         if(numberMonths.isEmpty()){
             numberMonths.put(1, "Jan");
