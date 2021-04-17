@@ -5,6 +5,7 @@
     <string name="total">Total Cases</string>
     <string name="cumulative_cases">cumulative cases</string>
     <string name="daily_cases">daily cases</string>
+    <string name="seven_day_moving_average">7-day moving average</string>
     <string name="cumulative_deaths">total deaths</string>
     <string name="daily_deaths">deaths today</string>
     <string name="daily_tests">tests today</string>

@@ -2,6 +2,7 @@ package com.errorDefault.oc_19.data_request;
 
 import android.annotation.SuppressLint;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.time.LocalDate;
@@ -9,6 +10,27 @@ import java.time.LocalDate;
 public class CityDataRequestReader extends DataRequestReader {
     private static final Map<String, Integer> monthNumbers = new TreeMap<>();
     private static final Map<Integer, String> numberMonths = new TreeMap<>();
+
+    private static ArrayList<String> getSevenMostRecentDates(String data){
+        LocalDate today = LocalDate.now();
+        ArrayList<String> mostRecentDates = new ArrayList<>();
+
+        while(mostRecentDates.size() < 7){
+            String date_str = convertDateFormatDMY(today);
+            if(data.indexOf(date_str) != -1){
+                mostRecentDates.add(date_str);
+            }
+            today = today.minusDays(1);
+        }
+        return mostRecentDates;
+    }
+
+    private static long getDailyCityCases(String data, String cityName, String date){
+        data = data.substring(data.indexOf(date));
+        String search = String.format("\"%s\":", cityName.replace(' ', '_'));
+        int dailyIndex = data.indexOf(search) + search.length();
+        return parseNumber(data, dailyIndex);
+    }
 
     private static int getMostRecentDateIndex(String data){
         LocalDate today = LocalDate.now();
@@ -28,12 +50,18 @@ public class CityDataRequestReader extends DataRequestReader {
         return parseNumber(data, totalIndex);
     }
 
-
     public static long getDailyCityCases(String data, String cityName) {
         data = data.substring(getMostRecentDateIndex(data));
         String search = String.format("\"%s\":", cityName.replace(' ', '_'));
         int dailyIndex = data.indexOf(search) + search.length();
         return parseNumber(data, dailyIndex);
+    }
+
+    public static double get7DayMovingAverage(String data, String cityName){
+        long sum = 0;
+        for(String date : getSevenMostRecentDates(data))
+            sum += getDailyCityCases(data, cityName, date);
+        return sum / 7.0;
     }
 
     @SuppressLint("DefaultLocale")

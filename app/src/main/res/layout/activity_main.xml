@@ -94,6 +94,30 @@
             app:layout_constraintTop_toBottomOf="@+id/cityCumulativeCases" />
 
         <TextView
+            android:id="@+id/city7DayAverage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/defaultCount"
+            android:textColor="@color/orange_500"
+            android:textSize="@dimen/count"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cityDailyCasesLabel"
+            tools:layout_editor_absoluteY="417dp" />
+
+        <TextView
+            android:id="@+id/city7DayAverageLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/seven_day_moving_average"
+            android:textColor="@color/orange_500"
+            android:textSize="@dimen/label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/city7DayAverage" />
+
+        <TextView
             android:id="@+id/citySource"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,7 +137,7 @@
             android:layout_marginTop="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cityDailyCasesLabel" />
+            app:layout_constraintTop_toBottomOf="@+id/city7DayAverageLabel" />
 
         <TextView
             android:id="@+id/county"

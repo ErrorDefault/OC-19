@@ -26,7 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String SHARED_PREFS = "sharedPrefs", CITY = "city", CITY_DAILY_CASES = "cidc", CITY_CUMUL_CASES = "cicc",
+    public static final String SHARED_PREFS = "sharedPrefs", CITY = "city", CITY_DAILY_CASES = "cidc", CITY_CUMUL_CASES = "cicc", CITY_7_DAY_AVG = "ci7d",
             COUNTY_DAILY_CASES = "codc", COUNTY_CUMUL_CASES = "cocc", COUNTY_DAILY_DEATHS = "codd", COUNTY_TOTAL_DEATHS = "cotd",
             COUNTY_CUMUL_RECOVERED = "cocr", COUNTY_DAILY_TESTS = "codt", COUNTY_CUMUL_TESTS = "coct", COUNTY_ICU = "cicu", COUNTY_HOSPITALIZED = "coh",
             COUNTY_POPULATION = "cop", COUNTY_ONE_DOSE = "od", COUNTY_TWO_DOSES = "td",
@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String mostRecentCityCasesDateStr = null;
 
-    private TextView cityDailyCases, cityCumulativeCases, city,
+    private TextView cityDailyCases, cityCumulativeCases, city7DayAvg, city,
             countyDailyCases, countyCumulativeCases, countyDailyDeaths, countyTotalDeaths,
             countyDailyTests, countyCumulativeTests, countyICU, countyHospitalized, countyCumulativeRecovered,
             countyPopulation, countyOneDose, countyOneDosePercentage, countyTwoDoses, countyTwoDosesPercentage,
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private final Handler mainHandler = new Handler();
 
-    private Map<String, Long[]> cache = new TreeMap<>();
+    private Map<String, Number[]> cache = new TreeMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         // Initialize TextViews
         cityDailyCases = findViewById(R.id.cityDailyCases);
         cityCumulativeCases = findViewById(R.id.cityCumulativeCases);
+        city7DayAvg = findViewById(R.id.city7DayAverage);
         city = findViewById(R.id.city);
 
         countyDailyCases = findViewById(R.id.countyDailyCases);
@@ -134,6 +135,7 @@ public class MainActivity extends AppCompatActivity {
         editor.putString(CITY, city.getText().toString());
         editor.putString(CITY_DAILY_CASES, cityDailyCases.getText().toString());
         editor.putString(CITY_CUMUL_CASES, cityCumulativeCases.getText().toString());
+        editor.putString(CITY_7_DAY_AVG, city7DayAvg.getText().toString());
 
         editor.putString(COUNTY_DAILY_CASES, countyDailyCases.getText().toString());
         editor.putString(COUNTY_CUMUL_CASES, countyCumulativeCases.getText().toString());
@@ -175,6 +177,7 @@ public class MainActivity extends AppCompatActivity {
         city.setText(sharedPreferences.getString(CITY, citySpinner.getItemAtPosition(0).toString()));
         cityDailyCases.setText(sharedPreferences.getString(CITY_DAILY_CASES, "0"));
         cityCumulativeCases.setText(sharedPreferences.getString(CITY_CUMUL_CASES, "0"));
+        city7DayAvg.setText(sharedPreferences.getString(CITY_7_DAY_AVG,"0"));
 
         countyDailyCases.setText(sharedPreferences.getString(COUNTY_DAILY_CASES, "0"));
         countyCumulativeCases.setText(sharedPreferences.getString(COUNTY_CUMUL_CASES, "0"));
@@ -210,14 +213,16 @@ public class MainActivity extends AppCompatActivity {
             try {
                 if (!cache.containsKey(selectedCity)) {
                     String data = new CityDataRequest().requestData(selectedCity);
-                    Long[] cityData = {CityDataRequestReader.getDailyCityCases(data, selectedCity), CityDataRequestReader.getTotalCityCases(data, selectedCity)};
+                    Number[] cityData = {CityDataRequestReader.getDailyCityCases(data, selectedCity), CityDataRequestReader.getTotalCityCases(data, selectedCity),
+                                        CityDataRequestReader.get7DayMovingAverage(data, selectedCity)};
                     cache.put(selectedCity, cityData);
                     if (mostRecentCityCasesDateStr == null)
                         mostRecentCityCasesDateStr = CityDataRequestReader.getMostRecentDate(data);
                 }
                 mainHandler.post(() -> {
-                    cityDailyCases.setText(String.format("%d", cache.get(selectedCity)[0]));
-                    cityCumulativeCases.setText(String.format("%d", cache.get(selectedCity)[1]));
+                    cityDailyCases.setText(String.format("%d", (Long)cache.get(selectedCity)[0]));
+                    cityCumulativeCases.setText(String.format("%d", (Long)cache.get(selectedCity)[1]));
+                    city7DayAvg.setText(String.format("%.2f", (Double)cache.get(selectedCity)[2]));
                     mostRecentCityDate.setText(mostRecentCityCasesDateStr);
                     city.setText(selectedCity);
                 });
